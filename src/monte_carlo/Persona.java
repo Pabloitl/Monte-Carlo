@@ -3,12 +3,12 @@ package monte_carlo;
 import java.time.LocalTime;
 
 public class Persona {
-    LocalTime horaLlegada, tiempoEntreLlegadas, horaAtencion, tiempoEspera, tiempoOperacion, horaSalida;
+    LocalTime horaLlegada, tiempoLlegadas, horaAtencion, tiempoEspera, tiempoOperacion, horaSalida;
     Operacion operacion;
 
     public Persona(Persona anteriorPersona) {
         horaLlegada();
-        tiempoEntreLlegadas();
+        tiempoLlegadas();
         horaAtencion();
         tiempoEspera();
         operacion();
@@ -20,7 +20,7 @@ public class Persona {
         return null;
     }
 
-    public LocalTime tiempoEntreLlegadas() {
+    public LocalTime tiempoLlegadas() {
         return null;
     }
 
