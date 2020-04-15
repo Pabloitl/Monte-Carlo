@@ -1,43 +1,76 @@
 package monte_carlo;
 
 import java.time.LocalTime;
+import data.Data;
+import java.util.Random;
 
 public class Persona {
     LocalTime horaLlegada, tiempoLlegadas, horaAtencion, tiempoEspera, tiempoOperacion, horaSalida;
     Operacion operacion;
 
     public Persona(Persona anteriorPersona) {
-        horaLlegada();
-        tiempoLlegadas();
-        horaAtencion();
-        tiempoEspera();
-        operacion();
-        tiempoOperacion();
+        if (anteriorPersona == null)
+            setDefaults();
+        else
+            setValues(anteriorPersona);
+        tiempoLlegadas = tiempoLlegadas();
+        tiempoEspera = tiempoEspera();
+        operacion = operacion();
+        tiempoOperacion = tiempoOperacion();
         horaSalida();
     }
 
-    public LocalTime horaLlegada() {
-        return null;
+    private void setDefaults() {
+        horaLlegada = horaLlegada(null, null);
+        horaAtencion(null);
     }
 
-    public LocalTime tiempoLlegadas() {
-        return null;
+    private void setValues(Persona anteriorPersona) {
+        horaLlegada = horaLlegada(anteriorPersona.horaLlegada,
+                                  anteriorPersona.tiempoLlegadas);
+        horaAtencion(anteriorPersona.horaSalida);
     }
 
-    public LocalTime horaAtencion() {
-        return null;
+    private LocalTime horaLlegada(LocalTime horaAnterior, LocalTime llegadasAnterior) {
+        if (horaAnterior == null)
+            return LocalTime.of(7, 0);
+        else
+            return horaAnterior.plusNanos(llegadasAnterior.toNanoOfDay());
     }
 
-    public LocalTime tiempoEspera() {
-        return null;
+    private LocalTime tiempoLlegadas() {
+        Data info = Data.getInstance();
+        return new Estadistica(info.media, info.desviacion).sample();
     }
 
-    public void operacion() {
+    private LocalTime horaAtencion(LocalTime salidaAnterior) {
+        if (salidaAnterior == null || salidaAnterior.isBefore(horaLlegada))
+            return horaLlegada;
+        return salidaAnterior;
     }
 
-    public void tiempoOperacion() {
+    private LocalTime tiempoEspera() {
+        return horaLlegada.minusNanos(horaAtencion.toNanoOfDay());
     }
 
-    public void horaSalida() {
+    private Operacion operacion() {
+        Data info = Data.getInstance();
+        float rand = new Random().nextFloat();
+        Operacion resultado = null;
+
+        for (Operacion op : info.operaciones) {
+            resultado = op;
+            if (op.probabilidad >= rand)
+                break;
+        }
+        return operacion;
+    }
+
+    private LocalTime tiempoOperacion() {
+        return operacion.duracion;
+    }
+
+    private LocalTime horaSalida() {
+        return horaLlegada.plusNanos(tiempoOperacion.toNanoOfDay());
     }
 }
