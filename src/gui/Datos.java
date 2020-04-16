@@ -42,10 +42,12 @@ public class Datos {
         escuchas();
         armar();
     }
+    
+    public JFrame getFrame() {
+        return window;
+    }
 
     private void configurar() {
-        window.setVisible(true);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLayout(new FlowLayout());
     }
 
@@ -74,7 +76,7 @@ public class Datos {
         muestrasField.setText(String.valueOf(info.muestras));
         for (int i = 0; i < info.operaciones.size(); i++) {
             Operacion temp = info.operaciones.get(i);
-            
+
             operacionesModel.setValueAt(
                     temp.getNombre(), i, 0);
             operacionesModel.setValueAt(
@@ -104,7 +106,8 @@ public class Datos {
         public void mouseClicked(MouseEvent me) {
             if (me.getSource() == confirm) {
                 saveData();
-                new Simulacion().run();
+                window.setVisible(false);
+                Simulacion.calculos();
             }
         }
 

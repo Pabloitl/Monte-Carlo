@@ -2,11 +2,12 @@ package monte_carlo;
 
 import java.time.LocalTime;
 import data.Data;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Persona {
-    LocalTime horaLlegada, tiempoLlegadas, horaAtencion, tiempoEspera, tiempoOperacion, horaSalida;
-    Operacion operacion;
+    public LocalTime horaLlegada, tiempoLlegadas, horaAtencion, tiempoEspera, tiempoOperacion, horaSalida;
+    public Operacion operacion;
 
     public Persona(Persona anteriorPersona) {
         if (anteriorPersona == null)
@@ -17,18 +18,18 @@ public class Persona {
         tiempoEspera = tiempoEspera();
         operacion = operacion();
         tiempoOperacion = tiempoOperacion();
-        horaSalida();
+        horaSalida = horaSalida();
     }
 
     private void setDefaults() {
         horaLlegada = horaLlegada(null, null);
-        horaAtencion(null);
+        horaAtencion = horaAtencion(null);
     }
 
     private void setValues(Persona anteriorPersona) {
         horaLlegada = horaLlegada(anteriorPersona.horaLlegada,
                                   anteriorPersona.tiempoLlegadas);
-        horaAtencion(anteriorPersona.horaSalida);
+        horaAtencion = horaAtencion(anteriorPersona.horaSalida);
     }
 
     private LocalTime horaLlegada(LocalTime horaAnterior, LocalTime llegadasAnterior) {
@@ -57,13 +58,13 @@ public class Persona {
         Data info = Data.getInstance();
         float rand = new Random().nextFloat();
         Operacion resultado = null;
-
+        
         for (Operacion op : info.operaciones) {
             resultado = op;
             if (op.probabilidad >= rand)
                 break;
         }
-        return operacion;
+        return resultado;
     }
 
     private LocalTime tiempoOperacion() {
@@ -72,5 +73,15 @@ public class Persona {
 
     private LocalTime horaSalida() {
         return horaLlegada.plusNanos(tiempoOperacion.toNanoOfDay());
+    }
+
+    public static ArrayList<Persona> generarMuestras(int muestras) {
+        Persona anterior = null;
+        ArrayList<Persona> tabla = new ArrayList();
+
+        for (int i = 0; i < muestras; i++) {
+            tabla.add(anterior = new Persona(anterior));
+        }
+        return tabla;
     }
 }
