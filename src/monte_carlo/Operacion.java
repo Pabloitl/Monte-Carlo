@@ -1,5 +1,7 @@
 package monte_carlo;
 
+import java.time.LocalTime;
+
 public class Operacion {
     float probabilidad;
     String nombre;
