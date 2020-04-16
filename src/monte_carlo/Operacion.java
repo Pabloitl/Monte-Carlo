@@ -1,11 +1,12 @@
 package monte_carlo;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class Operacion {
+public class Operacion implements Serializable {
     float probabilidad;
     String nombre;
     LocalTime duracion;
