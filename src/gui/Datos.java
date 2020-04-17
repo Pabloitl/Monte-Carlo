@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -65,6 +66,28 @@ public class Datos {
         window.add(scroll);
         window.add(confirm);
     }
+    
+    private boolean validarDatos() {
+        String fechaRegex = "\\d{2}:\\d{2}(?::\\d{2})?";
+        
+        if (!dsField.getText().matches(fechaRegex))
+            return false;
+        if (!mediaField.getText().matches(fechaRegex))
+            return false;
+        if (!muestrasField.getText().matches("[1-9][0-9]+"))
+            return false;
+        for (int i = 0; i < operacionesModel.getRowCount(); i++) {
+            if (operacionesModel.getValueAt(i, 0) == null ||
+                    operacionesModel.getValueAt(i, 1) == null)
+                break;
+            if (!operacionesModel.getValueAt(i, 0).toString().matches("[a-zA-Z ]+"))
+                return false;
+            if (!operacionesModel.getValueAt(i, 1).toString().matches(fechaRegex))
+                return false;
+            
+        }
+        return true;
+    }
 
     private void loadData() {
         if (!Data.read())
@@ -106,6 +129,10 @@ public class Datos {
         @Override
         public void mouseClicked(MouseEvent me) {
             if (me.getSource() == confirm) {
+                if (!validarDatos()) {
+                    JOptionPane.showMessageDialog(null, "Datos invalidos");
+                    return;
+                }
                 saveData();
                 window.setVisible(false);
                 Simulacion.calculos();
