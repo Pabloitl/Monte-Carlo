@@ -25,24 +25,24 @@ public class Datos {
     JButton confirm;
 
     public Datos() {
-        window        = new JFrame("Datos");
-        dsLabel       = new JLabel("Desviación estándar");
-        mediaLabel    = new JLabel("Media");
-        muestrasLabel = new JLabel("Muestras");
-        dsField       = new JTextField("00:00:30");
-        mediaField    = new JTextField("00:12:00");
-        muestrasField = new JTextField("800");
+        window           = new JFrame("Datos");
+        dsLabel          = new JLabel("Desviación estándar");
+        mediaLabel       = new JLabel("Media");
+        muestrasLabel    = new JLabel("Muestras");
+        dsField          = new JTextField("00:00:30");
+        mediaField       = new JTextField("00:12:00");
+        muestrasField    = new JTextField("800");
         operacionesModel = new DefaultTableModel(new String[]{"Nombre", "Duración"}, 100);
         loadData();
         operacionesTabla = new JTable(operacionesModel);
-        scroll = new JScrollPane(operacionesTabla);
-        confirm = new JButton("Aceptar");
+        scroll           = new JScrollPane(operacionesTabla);
+        confirm          = new JButton("Aceptar");
 
         configurar();
         escuchas();
         armar();
     }
-    
+
     public JFrame getFrame() {
         return window;
     }
@@ -86,6 +86,7 @@ public class Datos {
 
     private void saveData() {
         Data info = Data.getInstance();
+
         info.media = LocalTime.parse(mediaField.getText());
         info.desviacion = LocalTime.parse(dsField.getText());
         info.muestras = Integer.parseInt(muestrasField.getText());

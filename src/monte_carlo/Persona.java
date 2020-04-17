@@ -45,13 +45,14 @@ public class Persona {
     }
 
     private LocalTime horaAtencion(LocalTime salidaAnterior) {
-        if (salidaAnterior == null || salidaAnterior.isBefore(horaLlegada))
+        if (salidaAnterior == null || salidaAnterior.isBefore(horaLlegada)) {
             return horaLlegada;
+        }
         return salidaAnterior;
     }
 
     private LocalTime tiempoEspera() {
-        return horaLlegada.minusNanos(horaAtencion.toNanoOfDay());
+        return horaAtencion.minusNanos(horaLlegada.toNanoOfDay());
     }
 
     private Operacion operacion() {
@@ -60,9 +61,9 @@ public class Persona {
         Operacion resultado = null;
         
         for (Operacion op : info.operaciones) {
-            resultado = op;
             if (op.probabilidad >= rand)
-                break;
+                resultado = op;
+            else break;
         }
         return resultado;
     }
@@ -72,7 +73,7 @@ public class Persona {
     }
 
     private LocalTime horaSalida() {
-        return horaLlegada.plusNanos(tiempoOperacion.toNanoOfDay());
+        return horaAtencion.plusNanos(tiempoOperacion.toNanoOfDay());
     }
 
     public static ArrayList<Persona> generarMuestras(int muestras) {

@@ -46,7 +46,7 @@ public class Operacion implements Serializable {
 
         for (int i = 0; i < muestras; i++) {
             int j = rand.nextInt(op.size());
-
+            
             if (resultado.containsKey(op.get(j)))
                 resultado.put(op.get(j), resultado.get(op.get(j)) + 1);
             else
@@ -59,10 +59,10 @@ public class Operacion implements Serializable {
 
     public static void calcularProbabilidades(ArrayList<Operacion> op, HashMap<Operacion, Integer> frecuencias) {
         int sum = frecuencias.values().stream().mapToInt(i -> i).sum();
-        int probabilidadAnterior = 0;
-
+        float probabilidadAnterior = 0;
+        
         for (Operacion operacion : frecuencias.keySet()) {
-            probabilidadAnterior += frecuencias.get(operacion) / sum;
+            probabilidadAnterior += frecuencias.get(operacion) / (float) sum;
             operacion.setProbabilidad(probabilidadAnterior);
         }
     }

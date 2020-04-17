@@ -15,9 +15,8 @@ public class Simulacion {
 
     public static void calculos() {
         Data info = Data.getInstance();
+        Operacion.generarTabla(info.operaciones, info.muestras);
         ArrayList<Persona> tabla = Persona.generarMuestras(Data.getInstance().muestras);
-        Operacion.calcularProbabilidades(info.operaciones,
-                Operacion.generarTabla(info.operaciones, info.muestras));
         showResults(tabla.toArray(new Persona[] {}));
     }
 
