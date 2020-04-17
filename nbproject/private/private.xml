@@ -5,6 +5,8 @@
         <group>
             <file>file:/home/virtual/Projects/Simulacion/src/gui/Datos.java</file>
             <file>file:/home/virtual/Projects/Simulacion/src/data/File.java</file>
+            <file>file:/home/virtual/Projects/Simulacion/src/monte_carlo/Persona.java</file>
+            <file>file:/home/virtual/Projects/Simulacion/src/monte_carlo/Operacion.java</file>
             <file>file:/home/virtual/Projects/Simulacion/src/data/Data.java</file>
         </group>
     </open-files>

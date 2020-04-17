@@ -59,11 +59,13 @@ public class Persona {
         Data info = Data.getInstance();
         float rand = new Random().nextFloat();
         Operacion resultado = null;
+        float min = 1;
         
         for (Operacion op : info.operaciones) {
-            if (op.probabilidad >= rand)
+            if (rand <= op.probabilidad && op.probabilidad <= min) {
                 resultado = op;
-            else break;
+                min = op.probabilidad;
+            }
         }
         return resultado;
     }

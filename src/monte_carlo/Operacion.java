@@ -52,6 +52,7 @@ public class Operacion implements Serializable {
             else
                 resultado.put(op.get(j), 1);
         }
+        
         calcularProbabilidades(op, resultado);
 
         return resultado;
