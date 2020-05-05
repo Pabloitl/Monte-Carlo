@@ -1,14 +1,18 @@
 package gui;
 
 import data.Data;
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.ImageIcon;
 import java.time.LocalTime;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -18,18 +22,25 @@ import monte_carlo.Simulacion;
 
 public class Datos {
     JFrame window;
-    JLabel dsLabel, mediaLabel, muestrasLabel;
+    JPanel panel;
+    JPanel labelPanel [];
+    JLabel dsLabel, mediaLabel, muestrasLabel, transitoLabel;
     JTextField dsField, mediaField, muestrasField;
     DefaultTableModel operacionesModel;
     JTable operacionesTabla;
     JScrollPane scroll;
     JButton confirm;
+    ImageIcon transito;
+
 
     public Datos() {
         window           = new JFrame("Datos");
+        panel            = new JPanel();
+        transito         = new ImageIcon ("Path de la imagen");
         dsLabel          = new JLabel("Desviación estándar");
         mediaLabel       = new JLabel("Media");
         muestrasLabel    = new JLabel("Muestras");
+        transitoLabel    = new JLabel(transito);
         dsField          = new JTextField("00:00:30");
         mediaField       = new JTextField("00:12:00");
         muestrasField    = new JTextField("800");
@@ -38,8 +49,12 @@ public class Datos {
         operacionesTabla = new JTable(operacionesModel);
         scroll           = new JScrollPane(operacionesTabla);
         confirm          = new JButton("Aceptar");
-
+        labelPanel       = new JPanel [3];
+        for (int i = 0; i < labelPanel.length; i++) {
+            labelPanel [i] = new JPanel ();
+        }
         configurar();
+        personalizar();        
         escuchas();
         armar();
     }
@@ -49,22 +64,60 @@ public class Datos {
     }
 
     private void configurar() {
-        window.setLayout(new FlowLayout());
+        window.setLayout(new BorderLayout());
+        window.setResizable(false);
+        panel.setLayout(null);
+        window.setSize(600, 600);
+        dsLabel.setBounds(50, 50, 200,20 );
+        dsField.setBounds(200, 50, 200,20 );
+        mediaLabel.setBounds(50, 100, 200,20 );
+        mediaField.setBounds(200, 100, 200,20 );
+        muestrasLabel.setBounds(50, 150, 200,20 );
+        muestrasField.setBounds(200, 150, 200,20 );
+        confirm.setBounds(200, 200, 200, 30);
+        scroll.setBounds(0,250 ,600 , 350);
+        transitoLabel.setBounds(400, 50, 200,200 );
+        for (int i = 0, y = 50; i < labelPanel.length; i++, y +=50) {
+            labelPanel [i].setBounds (50, y , 200,20);
+        }
     }
 
     private void escuchas() {
         confirm.addMouseListener(new ButtonListener());
     }
+    
+    private void personalizar (){
+        Color colorFuente = new Color (18, 50, 171);
+        Color colorBackground = new Color (161, 171, 18);
+        Color colorPanel = new Color (246, 255, 105);
+        Font fuente = new Font ("Arial", Font.BOLD,14);
+        dsLabel.setFont(fuente);
+        mediaLabel.setFont(fuente);
+        muestrasLabel.setFont(fuente);
+        dsLabel.setForeground(colorFuente);
+        mediaLabel.setForeground(colorFuente);
+        muestrasLabel.setForeground(colorFuente);
+        panel.setBackground(colorPanel);
+        for (int i = 0; i < labelPanel.length; i++) {
+            labelPanel [i].setBackground(colorBackground);
+        }
+    }
+
 
     private void armar() {
-        window.add(dsLabel);
-        window.add(dsField);
-        window.add(mediaLabel);
-        window.add(mediaField);
-        window.add(muestrasLabel);
-        window.add(muestrasField);
-        window.add(scroll);
-        window.add(confirm);
+        window.add(panel);
+        panel.add(dsLabel);
+        panel.add(dsField);
+        panel.add(mediaLabel);
+        panel.add(mediaField);
+        panel.add(muestrasLabel);
+        panel.add(muestrasField);
+        panel.add(scroll);
+        panel.add(confirm);
+        for (int i = 0; i < labelPanel.length; i++) {
+            panel.add(labelPanel[i]);
+        }
+        panel.add(transitoLabel);
     }
     
     private boolean validarDatos() {
