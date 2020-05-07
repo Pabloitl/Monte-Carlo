@@ -2,6 +2,7 @@ package gui;
 
 import data.Data;
 import java.awt.BorderLayout;
+import java.util.HashMap;
 import javax.swing.JFrame;
 
 import javax.swing.JPanel;
@@ -9,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import monte_carlo.Operacion;
 
 import monte_carlo.Persona;
 import org.jfree.chart.ChartFactory;
@@ -33,7 +35,7 @@ public class Resultados {
         "Hora de salida"
     };
 
-    public Resultados(Persona[] res) {
+    public Resultados(Persona[] res, HashMap<Operacion, Integer> op) {
         window          = new JFrame();
         tabs = new JTabbedPane();
         resultadosModel = new DefaultTableModel();
@@ -42,7 +44,7 @@ public class Resultados {
         scrollTable = new JScrollPane(resultadosTabla);
 
         configurar();
-        armar(res);
+        armar(res, op);
     }
 
     private void llenarTabla(Persona[] res) {
@@ -68,9 +70,10 @@ public class Resultados {
         window.setLayout(new BorderLayout());
     }
 
-    private void armar(Persona[] res) {
+    private void armar(Persona[] res, HashMap<Operacion, Integer> op) {
         tabs.add(scrollTable, 0);
-        tabs.add(grafica(res), 1);
+        tabs.add(operaciones(op), 1);
+        tabs.add(grafica(res), 2);
         window.add(tabs);
     }
 
@@ -79,7 +82,7 @@ public class Resultados {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         float horaAnterior = 0;
         int adicional = 0;
-        
+
         for (int i = 0; i < res.length; i++) {
             float horaActual = res[i].tiempoEspera.getHour() + res[i].tiempoEspera.getMinute() / 60f + res[i].tiempoEspera.getSecond() / 3600f;
             if (horaActual < horaAnterior)
@@ -95,5 +98,26 @@ public class Resultados {
                 "Horas",
                 dataset);
         return new ChartPanel(histogram);
+    }
+
+    public JPanel operaciones(HashMap<Operacion, Integer> op) {
+        JPanel panel = new JPanel();
+        DefaultTableModel model = new DefaultTableModel();
+        JTable tabla = new JTable(model);
+        JScrollPane scroll = new JScrollPane(tabla);
+        int sum = 0;
+        
+        panel.setLayout(new BorderLayout());
+        model.setColumnIdentifiers(new String[] {"Operacion", "Cuenta", "F(x)"});
+        for (Operacion o : op.keySet()) {
+            model.addRow(new String[] {o.getNombre(),
+                String.valueOf(op.get(o)),
+                String.valueOf(o.getProbabilidad())});
+            sum += op.get(o);
+        }
+        model.addRow(new String[] {"Total", String.valueOf(sum)});
+        panel.add(scroll, BorderLayout.CENTER);
+        
+        return panel;
     }
 }
