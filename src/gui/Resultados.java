@@ -97,15 +97,15 @@ public class Resultados {
     public JPanel grafica(Persona[] res) {
         Data info = Data.getInstance();
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        float horaAnterior = 0;
+        Persona personaAnterior = null;
         int adicional = 0;
 
         for (int i = 0; i < res.length; i++) {
             float horaActual = res[i].tiempoEspera.getHour() + res[i].tiempoEspera.getMinute() / 60f + res[i].tiempoEspera.getSecond() / 3600f;
-            if (horaActual < horaAnterior)
+            if (personaAnterior != null && personaAnterior.tiempoEspera.plusSeconds(personaAnterior.tiempoOperacion.toSecondOfDay()).isBefore(personaAnterior.tiempoEspera))
                 adicional++;
-            horaAnterior = horaActual;
-            dataset.addValue(horaAnterior + 24 * adicional,
+            personaAnterior = res[i];
+            dataset.addValue(horaActual + 24 * adicional,
                     "Tiempo de espera",
                     String.valueOf(i));
         }

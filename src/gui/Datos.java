@@ -54,7 +54,7 @@ public class Datos {
             labelPanel [i] = new JPanel ();
         }
         configurar();
-        personalizar();        
+        personalizar();
         escuchas();
         armar();
     }
@@ -85,7 +85,7 @@ public class Datos {
     private void escuchas() {
         confirm.addMouseListener(new ButtonListener());
     }
-    
+
     private void personalizar (){
         Color colorFuente = new Color (18, 50, 171);
         Color colorBackground = new Color (161, 171, 18);
@@ -119,15 +119,19 @@ public class Datos {
         }
         panel.add(transitoLabel);
     }
-    
+
     private boolean validarDatos() {
-        String fechaRegex = "\\d{2}:\\d{2}(?::\\d{2})?";
-        
+        String fechaRegex = "[0-2][0-3]:[0-5]\\d(?::[0-5]\\d)?";
+
         if (!dsField.getText().matches(fechaRegex))
             return false;
         if (!mediaField.getText().matches(fechaRegex))
             return false;
         if (!muestrasField.getText().matches("[1-9][0-9]+"))
+            return false;
+        if (LocalTime.parse(dsField.getText()).isAfter(LocalTime.parse(mediaField.getText())))
+            return false;
+        if (operacionesModel.getRowCount() < 1)
             return false;
         for (int i = 0; i < operacionesModel.getRowCount(); i++) {
             if (operacionesModel.getValueAt(i, 0) == null ||
@@ -137,7 +141,7 @@ public class Datos {
                 return false;
             if (!operacionesModel.getValueAt(i, 1).toString().matches(fechaRegex))
                 return false;
-            
+
         }
         return true;
     }

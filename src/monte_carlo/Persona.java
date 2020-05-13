@@ -9,7 +9,7 @@ public class Persona {
     public LocalTime horaLlegada, tiempoLlegadas, horaAtencion, tiempoEspera, tiempoOperacion, horaSalida;
     public Operacion operacion;
 
-    public Persona(Persona anteriorPersona) {
+    public Persona(final Persona anteriorPersona) {
         if (anteriorPersona == null)
             setDefaults();
         else
@@ -23,46 +23,59 @@ public class Persona {
 
     private void setDefaults() {
         horaLlegada = horaLlegada(null, null);
-        horaAtencion = horaAtencion(null, null);
+        horaAtencion = horaAtencion(null, null, null, null);
     }
 
-    private void setValues(Persona anteriorPersona) {
+    private void setValues(final Persona anteriorPersona) {
         horaLlegada = horaLlegada(anteriorPersona.horaLlegada,
                                   anteriorPersona.tiempoLlegadas);
         horaAtencion = horaAtencion(anteriorPersona.horaSalida,
-                                    anteriorPersona.horaLlegada);
+                                    anteriorPersona.horaLlegada,
+                                    anteriorPersona.tiempoLlegadas,
+                                    anteriorPersona.tiempoOperacion);
     }
 
-    private LocalTime horaLlegada(LocalTime horaAnterior, LocalTime llegadasAnterior) {
+    private LocalTime horaLlegada(final LocalTime horaAnterior, final LocalTime llegadasAnterior) {
         if (horaAnterior == null)
             return LocalTime.of(7, 0);
-        else 
+        else
             return horaAnterior.plusNanos(llegadasAnterior.toNanoOfDay());
     }
 
     private LocalTime tiempoLlegadas() {
-        Data info = Data.getInstance();
+        final Data info = Data.getInstance();
         return new Estadistica(info.media, info.desviacion).sample();
     }
 
-    private LocalTime horaAtencion(LocalTime salidaAnterior, LocalTime llegadaAnterior) {
-        if (salidaAnterior == null || salidaAnterior.isBefore(horaLlegada) && !salidaAnterior.isBefore(llegadaAnterior)) {
-            return horaLlegada;
+    private LocalTime horaAtencion(final LocalTime salidaAnterior, final LocalTime llegadaAnterior, LocalTime tiempoLlegada, LocalTime operacionAnterior) {
+        if (salidaAnterior == null) return horaLlegada;
+        if (salidaAnterior.isBefore(llegadaAnterior) ) {
+            if (horaLlegada.isBefore(llegadaAnterior) && (salidaAnterior.isBefore(horaLlegada) || salidaAnterior.plusSeconds(tiempoLlegada.toSecondOfDay()).isBefore(salidaAnterior)))
+                return horaLlegada;
+            return salidaAnterior;
         }
-        return salidaAnterior;
+        if (salidaAnterior.isAfter(horaLlegada)) {
+            if (horaLlegada.isBefore(llegadaAnterior) && (salidaAnterior.isBefore(horaLlegada) || salidaAnterior.plusSeconds(tiempoLlegada.toSecondOfDay()).isBefore(salidaAnterior))) return horaLlegada;
+            return salidaAnterior;
+        }
+        return horaLlegada;
     }
 
     private LocalTime tiempoEspera() {
+        if (horaAtencion.isBefore(horaLlegada)) {
+            final LocalTime mediaNoche = LocalTime.MIDNIGHT;
+            return mediaNoche.minusSeconds(horaLlegada.toSecondOfDay()).plusSeconds(horaAtencion.toSecondOfDay());
+        }
         return horaAtencion.minusNanos(horaLlegada.toNanoOfDay());
     }
 
     private Operacion operacion() {
-        Data info = Data.getInstance();
-        float rand = new Random().nextFloat();
+        final Data info = Data.getInstance();
+        final float rand = new Random().nextFloat();
         Operacion resultado = info.operaciones.get(0);
         float min = 1;
-        
-        for (Operacion op : info.operaciones) {
+
+        for (final Operacion op : info.operaciones) {
             if (rand <= op.probabilidad && op.probabilidad <= min) {
                 resultado = op;
                 min = op.probabilidad;
@@ -79,9 +92,9 @@ public class Persona {
         return horaAtencion.plusNanos(tiempoOperacion.toNanoOfDay());
     }
 
-    public static ArrayList<Persona> generarMuestras(int muestras) {
+    public static ArrayList<Persona> generarMuestras(final int muestras) {
         Persona anterior = null;
-        ArrayList<Persona> tabla = new ArrayList();
+        final ArrayList<Persona> tabla = new ArrayList();
 
         for (int i = 0; i < muestras; i++) {
             tabla.add(anterior = new Persona(anterior));
