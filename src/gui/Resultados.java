@@ -150,7 +150,8 @@ public class Resultados {
         panel.add(scroll, BorderLayout.CENTER);
 
         return panel;
-
+    }
+    
     class Esc_Mouse implements MouseListener {
 
 
