@@ -101,11 +101,11 @@ public class Resultados {
     }
 
     private void armar(Persona[] res, HashMap<Operacion, Integer> op) {
-        tabs.add(operaciones(op), 1);
-        tabs.add(grafica(res), 2);
+        tabs.add(operaciones(op), "Operaciones", 0);
+        tabs.add(grafica(res), "Gráfica", 1);
         window.add(tabs, BorderLayout.NORTH);
-        window.add(panel, BorderLayout.SOUTH);
         panel.add(jtApoyo, BorderLayout.CENTER);
+        window.add(panel, BorderLayout.CENTER);
     }
 
     public JPanel grafica(Persona[] res) {
