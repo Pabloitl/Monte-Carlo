@@ -36,7 +36,7 @@ public class Datos {
     public Datos() {
         window           = new JFrame("Datos");
         panel            = new JPanel();
-        transito         = new ImageIcon ("Path de la imagen");
+        transito         = new ImageIcon ("images/transito.png");
         dsLabel          = new JLabel("Desviación estándar");
         mediaLabel       = new JLabel("Media");
         muestrasLabel    = new JLabel("Muestras");

@@ -23,19 +23,20 @@ public class Persona {
 
     private void setDefaults() {
         horaLlegada = horaLlegada(null, null);
-        horaAtencion = horaAtencion(null);
+        horaAtencion = horaAtencion(null, null);
     }
 
     private void setValues(Persona anteriorPersona) {
         horaLlegada = horaLlegada(anteriorPersona.horaLlegada,
                                   anteriorPersona.tiempoLlegadas);
-        horaAtencion = horaAtencion(anteriorPersona.horaSalida);
+        horaAtencion = horaAtencion(anteriorPersona.horaSalida,
+                                    anteriorPersona.horaLlegada);
     }
 
     private LocalTime horaLlegada(LocalTime horaAnterior, LocalTime llegadasAnterior) {
         if (horaAnterior == null)
             return LocalTime.of(7, 0);
-        else
+        else 
             return horaAnterior.plusNanos(llegadasAnterior.toNanoOfDay());
     }
 
@@ -44,8 +45,8 @@ public class Persona {
         return new Estadistica(info.media, info.desviacion).sample();
     }
 
-    private LocalTime horaAtencion(LocalTime salidaAnterior) {
-        if (salidaAnterior == null || salidaAnterior.isBefore(horaLlegada)) {
+    private LocalTime horaAtencion(LocalTime salidaAnterior, LocalTime llegadaAnterior) {
+        if (salidaAnterior == null || salidaAnterior.isBefore(horaLlegada) && !salidaAnterior.isBefore(llegadaAnterior)) {
             return horaLlegada;
         }
         return salidaAnterior;
@@ -58,7 +59,7 @@ public class Persona {
     private Operacion operacion() {
         Data info = Data.getInstance();
         float rand = new Random().nextFloat();
-        Operacion resultado = null;
+        Operacion resultado = info.operaciones.get(0);
         float min = 1;
         
         for (Operacion op : info.operaciones) {
