@@ -47,25 +47,9 @@ public class Resultados {
         window          = new JFrame();
         tabs            = new JTabbedPane();
         resultadosModel = new DefaultTableModel();
-
-        dtApoyo = new DefaultTableModel(null, columnas);
-
         llenarTabla(res);
-
-        sel = new String [7];
-
         resultadosTabla = new JTable(resultadosModel);
-
-        jtApoyo = new JTable(dtApoyo);
-
         scrollTable = new JScrollPane(resultadosTabla);
-        resultadosTabla.setFont(new Font ("Arial",Font.BOLD, 12));
-
-        jtApoyo.setFont(new Font ("Arial",Font.BOLD, 12));
-
-        resultadosTabla.setBackground(new Color(228, 228, 228));
-
-        jtApoyo.setBackground(new Color(228, 228, 228));
         configurar();
         armar(res, op);
         escuchas();
@@ -98,14 +82,16 @@ public class Resultados {
 
     private void configurar() {
         window.setLayout(new BorderLayout());
+        resultadosTabla.setFont(new Font ("Arial",Font.BOLD, 12));
+        resultadosTabla.setBackground(new Color(228, 228, 228));
+        
     }
 
     private void armar(Persona[] res, HashMap<Operacion, Integer> op) {
-        tabs.add(operaciones(op), "Operaciones", 0);
-        tabs.add(grafica(res), "Gráfica", 1);
-        window.add(tabs, BorderLayout.NORTH);
-        panel.add(jtApoyo, BorderLayout.CENTER);
-        window.add(panel, BorderLayout.CENTER);
+        tabs.add(scrollTable, "Resultados", 0);
+        tabs.add(operaciones(op), "Operaciones", 1);
+        tabs.add(grafica(res), "Gráfica", 2);
+        window.add(tabs, BorderLayout.CENTER);
     }
 
     public JPanel grafica(Persona[] res) {
@@ -137,6 +123,9 @@ public class Resultados {
         JTable tabla = new JTable(model);
         JScrollPane scroll = new JScrollPane(tabla);
         int sum = 0;
+        
+        tabla.setFont(new Font ("Arial",Font.BOLD, 12));
+        tabla.setBackground(new Color(228, 228, 228));
 
         panel.setLayout(new BorderLayout());
         model.setColumnIdentifiers(new String[] {"Operacion", "Cuenta", "F(x)"});
@@ -157,16 +146,16 @@ public class Resultados {
 
         @Override
         public void mouseClicked(MouseEvent me) {
-
-            if(dtApoyo.getRowCount()>0){
-                dtApoyo.removeRow(0);
-            }
-            int x = ((JTable) me.getSource()).getSelectedRow();
-            DefaultTableModel mod =(DefaultTableModel) ((JTable) me.getSource()).getModel();
-            for (int i = 0; i < 7; i++) {
-                sel[i] = (String) mod.getValueAt(x, i);
-            }
-            dtApoyo.addRow(sel);
+//
+//            if(dtApoyo.getRowCount()>0){
+//                dtApoyo.removeRow(0);
+//            }
+//            int x = ((JTable) me.getSource()).getSelectedRow();
+//            DefaultTableModel mod =(DefaultTableModel) ((JTable) me.getSource()).getModel();
+//            for (int i = 0; i < 7; i++) {
+//                sel[i] = (String) mod.getValueAt(x, i);
+//            }
+//            dtApoyo.addRow(sel);
         }
 
         @Override
