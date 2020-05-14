@@ -121,7 +121,7 @@ public class Datos {
     }
 
     private boolean validarDatos() {
-        String fechaRegex = "[0-2][0-3]:[0-5]\\d(?::[0-5]\\d)?";
+        String fechaRegex = "(?:[0-1][0-9]|20|21|22|23):[0-5]\\d(?::[0-5]\\d)?";
 
         if (!dsField.getText().matches(fechaRegex))
             return false;
@@ -131,9 +131,8 @@ public class Datos {
             return false;
         if (LocalTime.parse(dsField.getText()).isAfter(LocalTime.parse(mediaField.getText())))
             return false;
-        if (operacionesModel.getRowCount() < 1)
-            return false;
-        for (int i = 0; i < operacionesModel.getRowCount(); i++) {
+        int i;
+        for (i = 0; i < operacionesModel.getRowCount(); i++) {
             if (operacionesModel.getValueAt(i, 0) == null ||
                     operacionesModel.getValueAt(i, 1) == null)
                 break;
@@ -143,6 +142,7 @@ public class Datos {
                 return false;
 
         }
+        if (i < 1) return false;
         return true;
     }
 
